@@ -1,4 +1,6 @@
-﻿using SimpleLogger.Logging.Formatters;
+﻿using System.Diagnostics;
+
+using SimpleLogger.Logging.Formatters;
 
 namespace SimpleLogger.Logging.Handlers
 {
@@ -6,7 +8,9 @@ namespace SimpleLogger.Logging.Handlers
     {
         private readonly ILoggerFormatter _loggerFormatter;
 
-        public DebugConsoleLoggerHandler() : this(new DefaultLoggerFormatter()) { }
+        public DebugConsoleLoggerHandler() : this(new DefaultLoggerFormatter())
+        {
+        }
 
         public DebugConsoleLoggerHandler(ILoggerFormatter loggerFormatter)
         {
@@ -15,7 +19,7 @@ namespace SimpleLogger.Logging.Handlers
 
         public void Publish(LogMessage logMessage)
         {
-            System.Diagnostics.Debug.WriteLine(_loggerFormatter.ApplyFormat(logMessage));
+            Debug.WriteLine(_loggerFormatter.ApplyFormat(logMessage));
         }
     }
 }

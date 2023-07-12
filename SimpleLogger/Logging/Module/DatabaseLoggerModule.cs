@@ -1,7 +1,8 @@
-﻿using SimpleLogger.Logging.Module.Database;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
+
+using SimpleLogger.Logging.Module.Database;
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable IntroduceOptionalParameters.Global
@@ -10,34 +11,38 @@ namespace SimpleLogger.Logging.Module
 {
     public class DatabaseLoggerModule : LoggerModule
     {
-        private readonly string _connectionString;
-        private readonly string _tableName;
+        private readonly string       _connectionString;
         private readonly DatabaseType _databaseType;
+        private readonly string       _tableName;
 
-        public DatabaseLoggerModule(DatabaseType databaseType, string connectionString) 
-            : this(databaseType, connectionString, "Log") { }
+        public DatabaseLoggerModule(DatabaseType databaseType, string connectionString)
+            : this(databaseType, connectionString, "Log")
+        {
+        }
 
         public DatabaseLoggerModule(DatabaseType databaseType, string connectionString, string tableName)
         {
-            _databaseType = databaseType;
+            _databaseType     = databaseType;
             _connectionString = connectionString;
-            _tableName = tableName;
-        }
-
-        [Obsolete("Obsolete")]
-        public override void Initialize()
-        {
-            CreateTable();
+            _tableName        = tableName;
         }
 
         public override string Name => DatabaseFactory.GetDatabaseName(_databaseType);
 
+        [Obsolete("Obsolete")]
+#pragma warning disable CS0809 // Veraltetes Element überschreibt nicht veraltetes Element
+        public override void Initialize()
+#pragma warning restore CS0809 // Veraltetes Element überschreibt nicht veraltetes Element
+        {
+            CreateTable();
+        }
+
         private DbParameter GetParameter(DbCommand command, string name, object value, DbType type)
         {
             DbParameter parameter = command.CreateParameter();
-            parameter.DbType = type;
+            parameter.DbType        = type;
             parameter.ParameterName = (_databaseType.Equals(DatabaseType.Oracle) ? ":" : "@") + name;
-            parameter.Value = value;
+            parameter.Value         = value;
             return parameter;
         }
 
@@ -48,7 +53,9 @@ namespace SimpleLogger.Logging.Module
 
         /// <inheritdoc />
         [Obsolete]
+#pragma warning disable CS0809 // Veraltetes Element überschreibt nicht veraltetes Element
         public override void AfterLog(LogMessage logMessage)
+#pragma warning restore CS0809 // Veraltetes Element überschreibt nicht veraltetes Element
         {
             using (DbConnection connection = DatabaseFactory.GetConnection(_databaseType, _connectionString))
             {
@@ -74,10 +81,11 @@ namespace SimpleLogger.Logging.Module
             using (connection)
             {
                 connection.Open();
+
                 DbCommand sqlCommand = DatabaseFactory.GetCommand
                 (
                     _databaseType,
-                    DatabaseFactory.GetCheckIfShouldCreateTableQuery(_databaseType), 
+                    DatabaseFactory.GetCheckIfShouldCreateTableQuery(_databaseType),
                     connection
                 );
 

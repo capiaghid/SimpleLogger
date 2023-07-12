@@ -2,8 +2,8 @@
 {
     public enum DatabaseType
     {
-        MsSql = 1,
+        MsSql  = 1,
         Oracle = 2, // Only works on x64 machines
-        MySql = 3
+        MySql  = 3
     }
 }

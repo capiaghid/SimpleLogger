@@ -1,19 +1,20 @@
 ﻿using System;
+
 using SimpleLogger.Logging.Handlers;
 using SimpleLogger.Logging.Module;
 using SimpleLogger.Logging.Module.Database;
 
 namespace SimpleLogger.Sample
 {
-    class Program
+    internal class Program
     {
         public static void Main()
         {
             // Adding handler - to show log messages (ILoggerHandler)
             Logger.LoggerHandlerManager
-                .AddHandler(new ConsoleLoggerHandler())
-                .AddHandler(new FileLoggerHandler())
-                .AddHandler(new DebugConsoleLoggerHandler());
+                  .AddHandler(new ConsoleLoggerHandler())
+                  .AddHandler(new FileLoggerHandler())
+                  .AddHandler(new DebugConsoleLoggerHandler());
 
             // Fast logging (monitor name of class and methods from which is the application logged)
             Logger.Log();
@@ -88,7 +89,7 @@ namespace SimpleLogger.Sample
             EmailSenderLoggerModule emailSenderLoggerModule = new EmailSenderLoggerModule(smtpServerConfiguration)
             {
                 EnableSsl = true,
-                Sender = "sender-email@gmail.com"
+                Sender    = "sender-email@gmail.com"
             };
 
             // Add the module and it works

@@ -1,4 +1,5 @@
 ﻿using System;
+
 using SimpleLogger.Logging.Formatters;
 
 namespace SimpleLogger.Logging.Handlers
@@ -7,7 +8,9 @@ namespace SimpleLogger.Logging.Handlers
     {
         private readonly ILoggerFormatter _loggerFormatter;
 
-        public ConsoleLoggerHandler() : this(new DefaultLoggerFormatter()) { }
+        public ConsoleLoggerHandler() : this(new DefaultLoggerFormatter())
+        {
+        }
 
         public ConsoleLoggerHandler(ILoggerFormatter loggerFormatter)
         {
