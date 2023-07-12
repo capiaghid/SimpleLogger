@@ -31,19 +31,19 @@ namespace SimpleLogger.Logging.Handlers
         {
             if (!string.IsNullOrEmpty(_directory))
             {
-                var directoryInfo = new DirectoryInfo(Path.Combine(_directory));
+                DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(_directory));
                 if (!directoryInfo.Exists)
                     directoryInfo.Create();
             }
 
-            using (var writer = new StreamWriter(File.Open(Path.Combine(_directory, _fileName), FileMode.Append)))
+            using (StreamWriter writer = new StreamWriter(File.Open(Path.Combine(_directory, _fileName), FileMode.Append)))
                 writer.WriteLine(_loggerFormatter.ApplyFormat(logMessage));
         }
 
         private static string CreateFileName()
         {
-            var currentDate = DateTime.Now;
-            var guid = Guid.NewGuid();
+            DateTime currentDate = DateTime.Now;
+            Guid guid = Guid.NewGuid();
             return string.Format("Log_{0:0000}{1:00}{2:00}-{3:00}{4:00}_{5}.log",
                 currentDate.Year, currentDate.Month, currentDate.Day, currentDate.Hour, currentDate.Minute, guid);
         }

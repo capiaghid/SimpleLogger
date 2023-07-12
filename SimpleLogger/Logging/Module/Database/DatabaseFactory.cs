@@ -1,16 +1,15 @@
-﻿using MySql.Data.MySqlClient;
-using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.Common;
+using System.Data.OracleClient;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
+
+using MySql.Data.MySqlClient;
 
 namespace SimpleLogger.Logging.Module.Database
 {
     internal static class DatabaseFactory
     {
+        [Obsolete("Obsolete")]
         internal static DbConnection GetConnection(DatabaseType databaseType, string connectionString)
         {
             switch (databaseType)
@@ -26,6 +25,7 @@ namespace SimpleLogger.Logging.Module.Database
             return null;
         }
 
+        [Obsolete]
         internal static DbCommand GetCommand(DatabaseType databaseType, string commandText, DbConnection connection)
         {
             switch (databaseType)
@@ -33,7 +33,7 @@ namespace SimpleLogger.Logging.Module.Database
                 case DatabaseType.MsSql:
                     return new SqlCommand(commandText, connection as SqlConnection);
                 case DatabaseType.Oracle:
-                    return new OracleCommand(commandText, connection as OracleConnection) { BindByName = true };
+                    return new OracleCommand(commandText, connection as OracleConnection); // { BindByName = true };
                 case DatabaseType.MySql:
                     return new MySqlCommand(commandText, connection as MySqlConnection);
             }
@@ -63,7 +63,7 @@ namespace SimpleLogger.Logging.Module.Database
                 case DatabaseType.MsSql:
                     return @"create table [{0}]
                             (
-	                            [Id] int not null primary key identity, 
+                                [Id] int not null primary key identity, 
                                 [Text] nvarchar(4000) null, 
                                 [DateTime] datetime null, 
                                 [Log_Level] nvarchar(10) null, 
@@ -84,7 +84,7 @@ namespace SimpleLogger.Logging.Module.Database
                 case DatabaseType.MySql:
                     return @"create table {0}
                             (
-	                            Id int not null auto_increment,
+                                Id int not null auto_increment,
                                 Text varchar(4000) null, 
                                 DateTime datetime null, 
                                 Log_Level varchar(10) null, 
@@ -124,14 +124,14 @@ namespace SimpleLogger.Logging.Module.Database
             switch (databaseType)
             {
                 case DatabaseType.MsSql:
-                    return string.Format(@"insert into {0} ([Text], [DateTime], [Log_Level], [CallingClass], [CallingMethod]) 
-                                           values (@text, @dateTime, @log_level, @callingClass, @callingMethod);", tableName);
+                    return $@"insert into {tableName} ([Text], [DateTime], [Log_Level], [CallingClass], [CallingMethod]) 
+                                           values (@text, @dateTime, @log_level, @callingClass, @callingMethod);";
                 case DatabaseType.Oracle:
-                    return string.Format(@"insert into {0} (Id, Text, DateTime, Log_Level, CallingClass, CallingMethod) 
-                                           values (seq_log.nextval, :text, :dateTime, :log_level, :callingClass, :callingMethod)", tableName);
+                    return $@"insert into {tableName} (Id, Text, DateTime, Log_Level, CallingClass, CallingMethod) 
+                                           values (seq_log.nextval, :text, :dateTime, :log_level, :callingClass, :callingMethod)";
                 case DatabaseType.MySql:
-                    return string.Format(@"insert into {0} (Text, DateTime, Log_Level, CallingClass, CallingMethod) 
-                                           values (@text, @dateTime, @log_level, @callingClass, @callingMethod);", tableName);
+                    return $@"insert into {tableName} (Text, DateTime, Log_Level, CallingClass, CallingMethod) 
+                                           values (@text, @dateTime, @log_level, @callingClass, @callingMethod);";
             }
 
             return string.Empty;

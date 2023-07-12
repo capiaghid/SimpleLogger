@@ -82,10 +82,10 @@ namespace SimpleLogger.Sample
         public static void EmailModuleSample()
         {
             // Configuring smtp server
-            var smtpServerConfiguration = new SmtpServerConfiguration("userName", "password", "smtp.gmail.com", 587);
+            SmtpServerConfiguration smtpServerConfiguration = new SmtpServerConfiguration("userName", "password", "smtp.gmail.com", 587);
 
             // Creating a module
-            var emailSenderLoggerModule = new EmailSenderLoggerModule(smtpServerConfiguration)
+            EmailSenderLoggerModule emailSenderLoggerModule = new EmailSenderLoggerModule(smtpServerConfiguration)
             {
                 EnableSsl = true,
                 Sender = "sender-email@gmail.com"

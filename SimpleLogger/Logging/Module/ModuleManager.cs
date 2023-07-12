@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SimpleLogger.Logging.Module
 {
@@ -16,19 +14,19 @@ namespace SimpleLogger.Logging.Module
 
         public void BeforeLog()
         {
-            foreach (var loggerModule in _modules.Values)
+            foreach (LoggerModule loggerModule in _modules.Values)
                 loggerModule.BeforeLog();
         }
 
         public void AfterLog(LogMessage logMessage)
         {
-            foreach (var loggerModule in _modules.Values)
+            foreach (LoggerModule loggerModule in _modules.Values)
                 loggerModule.AfterLog(logMessage);
         }
 
         public void ExceptionLog(Exception exception)
         {
-            foreach (var loggerModule in _modules.Values)
+            foreach (LoggerModule loggerModule in _modules.Values)
                 loggerModule.ExceptionLog(exception);
         }
 

@@ -1,10 +1,10 @@
 ﻿using SimpleLogger.Logging.Module.Database;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
+// ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable IntroduceOptionalParameters.Global
 
 namespace SimpleLogger.Logging.Module
 {
@@ -24,19 +24,17 @@ namespace SimpleLogger.Logging.Module
             _tableName = tableName;
         }
 
+        [Obsolete("Obsolete")]
         public override void Initialize()
         {
             CreateTable();
         }
 
-        public override string Name
-        {
-            get { return DatabaseFactory.GetDatabaseName(_databaseType); }
-        }
+        public override string Name => DatabaseFactory.GetDatabaseName(_databaseType);
 
         private DbParameter GetParameter(DbCommand command, string name, object value, DbType type)
         {
-            var parameter = command.CreateParameter();
+            DbParameter parameter = command.CreateParameter();
             parameter.DbType = type;
             parameter.ParameterName = (_databaseType.Equals(DatabaseType.Oracle) ? ":" : "@") + name;
             parameter.Value = value;
@@ -48,13 +46,15 @@ namespace SimpleLogger.Logging.Module
             command.Parameters.Add(GetParameter(command, name, value, type));
         }
 
+        /// <inheritdoc />
+        [Obsolete]
         public override void AfterLog(LogMessage logMessage)
         {
-            using (var connection = DatabaseFactory.GetConnection(_databaseType, _connectionString))
+            using (DbConnection connection = DatabaseFactory.GetConnection(_databaseType, _connectionString))
             {
                 connection.Open();
-                var commandText = DatabaseFactory.GetInsertCommand(_databaseType, _tableName);
-                var sqlCommand = DatabaseFactory.GetCommand(_databaseType, commandText, connection);
+                string commandText = DatabaseFactory.GetInsertCommand(_databaseType, _tableName);
+                DbCommand sqlCommand = DatabaseFactory.GetCommand(_databaseType, commandText, connection);
 
                 AddParameter(sqlCommand, "text", logMessage.Text, DbType.String);
                 AddParameter(sqlCommand, "dateTime", logMessage.DateTime, DbType.Date);
@@ -66,14 +66,15 @@ namespace SimpleLogger.Logging.Module
             }
         }
 
+        [Obsolete]
         private void CreateTable()
         {
-            var connection = DatabaseFactory.GetConnection(_databaseType, _connectionString);
+            DbConnection connection = DatabaseFactory.GetConnection(_databaseType, _connectionString);
 
             using (connection)
             {
                 connection.Open();
-                var sqlCommand = DatabaseFactory.GetCommand
+                DbCommand sqlCommand = DatabaseFactory.GetCommand
                 (
                     _databaseType,
                     DatabaseFactory.GetCheckIfShouldCreateTableQuery(_databaseType), 
@@ -82,11 +83,11 @@ namespace SimpleLogger.Logging.Module
 
                 AddParameter(sqlCommand, "tableName", _tableName.ToLower(), DbType.String);
 
-                var result = sqlCommand.ExecuteScalar();
+                object result = sqlCommand.ExecuteScalar();
 
                 if (result == null)
                 {
-                    var commandText = string.Format(DatabaseFactory.GetCreateTableQuery(_databaseType), _tableName);
+                    string commandText = string.Format(DatabaseFactory.GetCreateTableQuery(_databaseType), _tableName);
                     sqlCommand = DatabaseFactory.GetCommand(_databaseType, commandText, connection);
                     sqlCommand.ExecuteMultipleNonQuery();
                 }

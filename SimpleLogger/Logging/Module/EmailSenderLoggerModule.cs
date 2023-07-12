@@ -36,27 +36,24 @@ namespace SimpleLogger.Logging.Module
             Recipients = new List<string>();
         }
 
-        public override string Name
-        {
-            get { return "EmailSenderLoggerModule"; }
-        }
+        public override string Name => "EmailSenderLoggerModule";
 
         public override void ExceptionLog(Exception exception)
         {
             if (string.IsNullOrEmpty(Sender) || Recipients.Count == 0)
                 throw new NullReferenceException("Not specified email sender and recipient. ");
 
-            var body = MakeEmailBodyFromLogHistory();
-            var client = new SmtpClient(_smtpServerConfiguration.Host, _smtpServerConfiguration.Port)
+            string body = MakeEmailBodyFromLogHistory();
+            SmtpClient client = new SmtpClient(_smtpServerConfiguration.Host, _smtpServerConfiguration.Port)
             {
                 EnableSsl = EnableSsl,
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(_smtpServerConfiguration.UserName, _smtpServerConfiguration.Password)
             };
 
-            foreach (var recipient in Recipients)
+            foreach (string recipient in Recipients)
             {
-                using (var mailMessage = new MailMessage(Sender, recipient, _subject, body))
+                using (MailMessage mailMessage = new MailMessage(Sender, recipient, _subject, body))
                 {
                     client.Send(mailMessage);
                 }
@@ -65,16 +62,16 @@ namespace SimpleLogger.Logging.Module
 
         private static string GenerateSubjectName()
         {
-            var currentDate = DateTime.Now;
+            DateTime currentDate = DateTime.Now;
             return string.Format("SimpleLogger {0} {1}", currentDate.ToShortDateString(), currentDate.ToShortTimeString());
         }
 
         private string MakeEmailBodyFromLogHistory()
         {
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("Simple logger - email module");
 
-            foreach (var logMessage in Logger.Messages)
+            foreach (LogMessage logMessage in Logger.Messages)
                 stringBuilder.AppendLine(_loggerFormatter.ApplyFormat(logMessage));
 
             return stringBuilder.ToString();

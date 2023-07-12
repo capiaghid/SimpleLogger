@@ -23,7 +23,7 @@ namespace SimpleLogger.Logging
 
         public void Log<TClass>(Exception exception) where TClass : class
         {
-            var message = string.Format("Log exception -> Message: {0}\nStackTrace: {1}", exception.Message, exception.StackTrace);
+            string message = string.Format("Log exception -> Message: {0}\nStackTrace: {1}", exception.Message, exception.StackTrace);
             Logger.Log<TClass>(DebugLevel, message);
         }
 

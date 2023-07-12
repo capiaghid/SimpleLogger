@@ -52,14 +52,11 @@ namespace SimpleLogger
 
         public static Level DefaultLevel
         {
-            get { return _defaultLevel; }
-            set { _defaultLevel = value; }
+            get => _defaultLevel;
+            set => _defaultLevel = value;
         }
 
-        public static ILoggerHandlerManager LoggerHandlerManager
-        {
-            get { return LogPublisher; }
-        }
+        public static ILoggerHandlerManager LoggerHandlerManager => LogPublisher;
 
         public static void Log()
         {
@@ -73,11 +70,11 @@ namespace SimpleLogger
 
         public static void Log(Level level, string message)
         {
-            var stackFrame = FindStackFrame();
-            var methodBase = GetCallingMethodBase(stackFrame);
-            var callingMethod = methodBase.Name;
-            var callingClass = methodBase.ReflectedType.Name;
-            var lineNumber = stackFrame.GetFileLineNumber();
+            StackFrame stackFrame = FindStackFrame();
+            MethodBase methodBase = GetCallingMethodBase(stackFrame);
+            string callingMethod = methodBase.Name;
+            string callingClass = methodBase.ReflectedType.Name;
+            int lineNumber = stackFrame.GetFileLineNumber();
 
             Log(level, message, callingClass, callingMethod, lineNumber);
         }
@@ -90,7 +87,7 @@ namespace SimpleLogger
 
         public static void Log<TClass>(Exception exception) where TClass : class
         {
-            var message = string.Format("Log exception -> Message: {0}\nStackTrace: {1}", exception.Message,
+            string message = string.Format("Log exception -> Message: {0}\nStackTrace: {1}", exception.Message,
                                         exception.StackTrace);
             Log<TClass>(Level.Error, message);
         }
@@ -102,11 +99,11 @@ namespace SimpleLogger
 
         public static void Log<TClass>(Level level, string message) where TClass : class
         {
-            var stackFrame = FindStackFrame();
-            var methodBase = GetCallingMethodBase(stackFrame);
-            var callingMethod = methodBase.Name;
-            var callingClass = typeof(TClass).Name;
-            var lineNumber = stackFrame.GetFileLineNumber();
+            StackFrame stackFrame = FindStackFrame();
+            MethodBase methodBase = GetCallingMethodBase(stackFrame);
+            string callingMethod = methodBase.Name;
+            string callingClass = typeof(TClass).Name;
+            int lineNumber = stackFrame.GetFileLineNumber();
 
             Log(level, message, callingClass, callingMethod, lineNumber);
         }
@@ -116,10 +113,10 @@ namespace SimpleLogger
             if (!_isTurned || (!_isTurnedDebug && level == Level.Debug))
                 return;
 
-            var currentDateTime = DateTime.Now;
+            DateTime currentDateTime = DateTime.Now;
 
             ModuleManager.BeforeLog();
-            var logMessage = new LogMessage(level, message, currentDateTime, callingClass, callingMethod, lineNumber);
+            LogMessage logMessage = new LogMessage(level, message, currentDateTime, callingClass, callingMethod, lineNumber);
             LogPublisher.Publish(logMessage);
             ModuleManager.AfterLog(logMessage);
         }
@@ -132,11 +129,11 @@ namespace SimpleLogger
 
         private static StackFrame FindStackFrame()
         {
-            var stackTrace = new StackTrace();
-            for (var i = 0; i < stackTrace.GetFrames().Count(); i++)
+            StackTrace stackTrace = new StackTrace();
+            for (int i = 0; i < stackTrace.GetFrames().Count(); i++)
             {
-                var methodBase = stackTrace.GetFrame(i).GetMethod();
-                var name = MethodBase.GetCurrentMethod().Name;
+                MethodBase methodBase = stackTrace.GetFrame(i).GetMethod();
+                string name = MethodBase.GetCurrentMethod().Name;
                 if (!methodBase.Name.Equals("Log") && !methodBase.Name.Equals(name))
                     return new StackFrame(i, true);
             }
@@ -163,25 +160,16 @@ namespace SimpleLogger
             _isTurnedDebug = false;
         }
 
-        public static IEnumerable<LogMessage> Messages
-        {
-            get { return LogPublisher.Messages; }
-        }
+        public static IEnumerable<LogMessage> Messages => LogPublisher.Messages;
 
-        public static DebugLogger Debug
-        {
-            get { return DebugLogger; }
-        }
+        public static DebugLogger Debug => DebugLogger;
 
-        public static ModuleManager Modules
-        {
-            get { return ModuleManager; }
-        }
+        public static ModuleManager Modules => ModuleManager;
 
         public static bool StoreLogMessages
         { 
-            get { return LogPublisher.StoreLogMessages; }
-            set { LogPublisher.StoreLogMessages = value; }
+            get => LogPublisher.StoreLogMessages;
+            set => LogPublisher.StoreLogMessages = value;
         }
 
         static class FilterPredicates

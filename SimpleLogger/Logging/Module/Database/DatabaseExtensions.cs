@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace SimpleLogger.Logging.Module.Database
 {
@@ -10,9 +7,9 @@ namespace SimpleLogger.Logging.Module.Database
     {
         internal static void ExecuteMultipleNonQuery(this IDbCommand dbCommand)
         {
-            var sqlStatementArray = dbCommand.CommandText
-                                             .Split(new string[] { ";" },
-                                                    StringSplitOptions.RemoveEmptyEntries);
+            string[] sqlStatementArray = dbCommand.CommandText
+                                                  .Split(new string[] { ";" },
+                                                       StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string sqlStatement in sqlStatementArray)
             {
