@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +9,8 @@ using System.Reflection;
 using SimpleLogger.Logging;
 using SimpleLogger.Logging.Handlers;
 using SimpleLogger.Logging.Module;
+
+#endregion
 
 namespace SimpleLogger
 {

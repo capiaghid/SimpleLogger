@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Data.Common;
 using System.Data.OracleClient;
 using System.Data.SqlClient;
 
 using MySql.Data.MySqlClient;
+
+#endregion
 
 namespace SimpleLogger.Logging.Module.Database
 {

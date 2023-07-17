@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 
 using SimpleLogger.Logging.Formatters;
+
+#endregion
 
 namespace SimpleLogger.Logging.Module
 {

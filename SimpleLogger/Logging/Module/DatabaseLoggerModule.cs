@@ -1,8 +1,13 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Data;
 using System.Data.Common;
 
 using SimpleLogger.Logging.Module.Database;
+
+#endregion
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable IntroduceOptionalParameters.Global

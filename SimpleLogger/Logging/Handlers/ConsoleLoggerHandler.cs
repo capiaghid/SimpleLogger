@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 
 using SimpleLogger.Logging.Formatters;
+
+#endregion
 
 namespace SimpleLogger.Logging.Handlers
 {
